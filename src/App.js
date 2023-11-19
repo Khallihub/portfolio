@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Fragment, useState } from "react";
+import Welcome from "./Pages/Welcome";
+import About from "./Pages/About";
+import Skills from "./Pages/Skills";
+import Projects from "./Pages/Projects";
+import NavigationModal from "./Components/Navigation";
+import Contact from "./Pages/Contact";
+import Footer from "./Components/Footer";
+import MenuModal from "./Components/MenuBar";
 
 function App() {
+  const [isChecked, setIsChecked] = useState(false);
+  const checkHandler = () => {
+    console.log("checkHandler");
+    const checkbox = document.querySelector(".hamburger-menu input");
+    setIsChecked(checkbox.checked);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <div id="background" className="app-bg w-screen">
+        <MenuModal checkHandler={checkHandler} />
+        {isChecked && <NavigationModal />}
+        {!isChecked && (
+          <>
+            <Welcome />
+            <About />
+            <Skills />
+            <Projects />
+            <Contact />
+            <Footer />
+          </>
+        )}
+      </div>
+    </Fragment>
   );
 }
 

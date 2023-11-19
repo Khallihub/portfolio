@@ -106,7 +106,7 @@
 }
 
 :root {
-  --bar-width: 50px;
+  --bar-width: 40px;
   --bar-height: 6px;
   --hamburger-gap: 6px;
   --foreground: purple;

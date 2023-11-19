@@ -58,12 +58,11 @@ const Skills = () => {
   }, []);
 
   return (
-    <div id="skills" className="h-screen w-5/6 mx-auto flex flex-col justify-center relative">
+    <div id="skills" className="h-fit my-10 w-5/6 mx-auto flex flex-col justify-center relative">
       <img
         src={rightPattern}
         alt=""
         className="absolute hidden right-0 bottom-0 w-2/12 max-w-xs md:block"
-        loading="lazy"
         height="700"
         width="320"
       ></img>

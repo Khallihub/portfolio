@@ -76,31 +76,7 @@ const Footer = () => {
             </svg>
           </a>
           <a
-            href=""
-            className="link mr-4 mb-4 md:mb-0 hover:text-black"
-            rel="noreferrer"
-            target="_blank"
-            aria-label="instagram"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="feather feather-instagram"
-            >
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-            </svg>
-          </a>
-          <a
-            href=""
+            href="https://twitter.com/KHAILD000000000"
             className="link mb-4 md:mb-0 hover:text-black"
             rel="noreferrer"
             target="_blank"
@@ -136,12 +112,3 @@ const Footer = () => {
 };
 
 export default Footer;
-// welcome like shu done
-// about like sharlee done
-// skills shu  done
-// project 
-
-
-// navigation menu like sharlee done
-// contact shu done
-// footer shu done

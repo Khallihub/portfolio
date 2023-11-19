@@ -24,8 +24,8 @@ export default defineType({
     }),
     defineField(
       {
-        name: "teckStack",
-        title: "TeckStack",
+        name: "techStack",
+        title: "TechStack",
         type: "array",
         of: [{type: "reference", to: [{type: "techStack"}]}]
       }

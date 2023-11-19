@@ -1,3 +1,5 @@
+import me from "../me.jpg"
+
 const About = () => {
   return (
     <div id="about" className="w-screen">
@@ -15,7 +17,7 @@ const About = () => {
           </p>
         </div>
           <img
-            src="https://images.unsplash.com/photo-1570158268183-d296b2892211?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHBvcnRyYWl0fGVufDB8fDB8fHww"
+            src={me}
             alt="Khalid Abdu Kemal"
             className="img rounded-3xl md:rounded-none md:rounded-bl-3xl "
           />

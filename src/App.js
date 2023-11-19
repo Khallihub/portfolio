@@ -12,7 +12,6 @@ import MenuModal from "./Components/MenuBar";
 function App() {
   const [isChecked, setIsChecked] = useState(false);
   const checkHandler = () => {
-    console.log("checkHandler");
     const checkbox = document.querySelector(".hamburger-menu input");
     setIsChecked(checkbox.checked);
   };
@@ -20,7 +19,7 @@ function App() {
     <Fragment>
       <div id="background" className="app-bg w-screen">
         <MenuModal checkHandler={checkHandler} />
-        {isChecked && <NavigationModal />}
+        {isChecked && <NavigationModal isChecked={isChecked} setIsChecked={setIsChecked} />}
         {!isChecked && (
           <>
             <Welcome />

@@ -39,8 +39,20 @@ const Contact = () => {
       }
     };
   }
+
+  function sendMail (e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+    const data = {
+      name,
+      email,
+      message
+    }
+  }
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex justify-center items-center my-20">
       <div
         id="contact"
         className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 min-h-screen flex flex-col p-6 "

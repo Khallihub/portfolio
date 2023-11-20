@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/http//:Khallihub.github.io/portfolio/static/css/main.891fec9c.css",
-    "main.js": "/http//:Khallihub.github.io/portfolio/static/js/main.def00ca9.js",
-    "static/js/726.26062047.chunk.js": "/http//:Khallihub.github.io/portfolio/static/js/726.26062047.chunk.js",
-    "static/js/787.7da95b79.chunk.js": "/http//:Khallihub.github.io/portfolio/static/js/787.7da95b79.chunk.js",
-    "static/media/me.jpg": "/http//:Khallihub.github.io/portfolio/static/media/me.24ebdfe6d2fee9020e74.jpg",
-    "static/media/logo.svg": "/http//:Khallihub.github.io/portfolio/static/media/logo.2f1984d94070d56c33dff0e2e1b626c3.svg",
-    "static/media/footer-curve.svg": "/http//:Khallihub.github.io/portfolio/static/media/footer-curve.33f584fc83d8ef809c91.svg",
-    "static/media/right-pattern.svg": "/http//:Khallihub.github.io/portfolio/static/media/right-pattern.e04b1dedf063addde24b40fed8b4b2e4.svg",
-    "index.html": "/http//:Khallihub.github.io/portfolio/index.html",
-    "main.891fec9c.css.map": "/http//:Khallihub.github.io/portfolio/static/css/main.891fec9c.css.map",
-    "main.def00ca9.js.map": "/http//:Khallihub.github.io/portfolio/static/js/main.def00ca9.js.map",
-    "726.26062047.chunk.js.map": "/http//:Khallihub.github.io/portfolio/static/js/726.26062047.chunk.js.map",
-    "787.7da95b79.chunk.js.map": "/http//:Khallihub.github.io/portfolio/static/js/787.7da95b79.chunk.js.map"
+    "main.css": "/http//:Khallihub.github.io/Khallihub.github.io/static/css/main.0fb2c3e0.css",
+    "main.js": "/http//:Khallihub.github.io/Khallihub.github.io/static/js/main.7353d905.js",
+    "static/js/726.26062047.chunk.js": "/http//:Khallihub.github.io/Khallihub.github.io/static/js/726.26062047.chunk.js",
+    "static/js/787.7da95b79.chunk.js": "/http//:Khallihub.github.io/Khallihub.github.io/static/js/787.7da95b79.chunk.js",
+    "static/media/me.jpg": "/http//:Khallihub.github.io/Khallihub.github.io/static/media/me.24ebdfe6d2fee9020e74.jpg",
+    "static/media/logo.svg": "/http//:Khallihub.github.io/Khallihub.github.io/static/media/logo.2f1984d94070d56c33dff0e2e1b626c3.svg",
+    "static/media/footer-curve.svg": "/http//:Khallihub.github.io/Khallihub.github.io/static/media/footer-curve.33f584fc83d8ef809c91.svg",
+    "index.html": "/http//:Khallihub.github.io/Khallihub.github.io/index.html",
+    "static/media/right-pattern.svg": "/http//:Khallihub.github.io/Khallihub.github.io/static/media/right-pattern.e04b1dedf063addde24b40fed8b4b2e4.svg",
+    "main.0fb2c3e0.css.map": "/http//:Khallihub.github.io/Khallihub.github.io/static/css/main.0fb2c3e0.css.map",
+    "main.7353d905.js.map": "/http//:Khallihub.github.io/Khallihub.github.io/static/js/main.7353d905.js.map",
+    "726.26062047.chunk.js.map": "/http//:Khallihub.github.io/Khallihub.github.io/static/js/726.26062047.chunk.js.map",
+    "787.7da95b79.chunk.js.map": "/http//:Khallihub.github.io/Khallihub.github.io/static/js/787.7da95b79.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.891fec9c.css",
-    "static/js/main.def00ca9.js"
+    "static/css/main.0fb2c3e0.css",
+    "static/js/main.7353d905.js"
   ]
 }

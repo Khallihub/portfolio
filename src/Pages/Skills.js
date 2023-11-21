@@ -1,6 +1,6 @@
 import { sanityClient } from "../Client";
 import { useEffect, useState } from "react";
-import rightPattern  from "../right-pattern.svg";
+import rightPattern from "../right-pattern.svg";
 const Skills = () => {
   const [, setSkills] = useState([]);
   const [Lang, setLang] = useState([]);
@@ -29,7 +29,6 @@ const Skills = () => {
         const framesArr = [];
         const dbArr = [];
         const otherArr = [];
-
         data.forEach((element) => {
           const img = `<img src="${element.image.asset.url}" alt="${element.image.alt}" class="w-20 h-20"/>`;
           if (
@@ -58,7 +57,10 @@ const Skills = () => {
   }, []);
 
   return (
-    <div id="skills" className="h-fit my-10 w-5/6 mx-auto flex flex-col justify-center relative">
+    <div
+      id="skills"
+      className="h-fit my-10 w-5/6 mx-auto flex flex-col justify-center relative"
+    >
       <img
         src={rightPattern}
         alt=""
@@ -87,9 +89,10 @@ const Skills = () => {
         <div className="mt-10">
           <h2 className="py-2">LIBRARY AND FRAMEWORKS</h2>
           <div className="flex gap-2 flex-wrap">
-            {Frames.map((img, index) => (
-              <div key={index} dangerouslySetInnerHTML={{ __html: img }} />
-            ))}
+            {Frames.map((img, index) => {
+              console.log(img)
+              return <div key={index} dangerouslySetInnerHTML={{ __html: img }} />;
+            })}
           </div>
         </div>
         <div className="flex mt-10 gap-5 flex-wrap">

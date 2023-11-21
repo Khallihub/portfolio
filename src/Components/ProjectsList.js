@@ -4,7 +4,7 @@ const ProjectsList = (props) => {
   return (
     <div className="flex flex-col self-start justify-center items-center gap-6 md:w-1/3 relative top-0 left-0">
       <h1 className="p-4 text-5xl">Projects</h1>
-      <div className="flex">
+      <div className="flex w-full">
         <div className="h-full flex flex-col justify-start">
           <div className="list-border-left"></div>
         </div>

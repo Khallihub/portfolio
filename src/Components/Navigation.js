@@ -10,7 +10,7 @@ const Navigation = ({ isChecked, setIsChecked }) => {
   return (
     <div
       id="m-bar"
-      className="w-screen h-screen flex flex-col justify-center sm:justify-end sm:pb-10 text-white"
+      className="w-screen h-screen flex flex-col justify-center sm:justify-end sm:pb-28 text-white"
     >
       <nav className="sm:h-3/5 h-1/4">
         <ul className="flex flex-col h-96 sm:w-3/4 w-5/6 ml-auto justify-around sm:p-0 pb-56  ">

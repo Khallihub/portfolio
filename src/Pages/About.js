@@ -1,4 +1,4 @@
-import me from "../me.jpg"
+import me from "../me.jpg";
 
 const About = () => {
   return (
@@ -16,11 +16,13 @@ const About = () => {
             team of developers to create amazing websites.
           </p>
         </div>
+        <div>
           <img
             src={me}
             alt="Khalid Abdu Kemal"
-            className="img rounded-3xl md:rounded-none md:rounded-bl-3xl "
+            className="img rounded-3xl md:rounded-none md:rounded-bl-3xl md:w-"
           />
+        </div>
       </div>
     </div>
   );

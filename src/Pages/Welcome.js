@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import Typed from "typed.js";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 const Welcome = () => {
   useEffect(() => {
@@ -21,7 +23,10 @@ const Welcome = () => {
   }, []);
 
   return (
-    <div id="home" className="w-screen h-screen flex flex-col justify-around items-stretch relative">
+    <div
+      id="home"
+      className="w-screen h-screen flex flex-col justify-around items-stretch relative"
+    >
       <div
         role="img"
         className="text-white opacity-10 sm:text-9xl xs:text-8xl inline-block z-50 absolute rotate-90 right-0 md:top-52 xs:top-96"
@@ -138,8 +143,14 @@ const Welcome = () => {
             </svg>
           </a>
         </div>
-        <div>
-          <a href="#about" className="border-4 border-purple-700 text-white px-8 py-2  rounded-xl mb-4 md:mb-8 hover:text-purple-700">Explore</a>
+        <div >
+          <a
+            href="#about"
+            className="border-4 border-purple-700 text-white px-8 py-2  rounded-xl mb-4 md:mb-8 hover:text-purple-700"
+          >
+            Explore{"  "}
+            <FontAwesomeIcon icon={faAngleDown} className="arrow-icon" />
+          </a>
         </div>
       </div>
     </div>

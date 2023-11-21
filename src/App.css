@@ -34,11 +34,20 @@
   box-shadow: 0 0 1rem #7000ff;
 }
 
-/* .procon {
+.transition-box {
+  transition: transform 0.5s ease-in-out;
   transform-style: preserve-3d;
+}
+
+.show-front {
+  transform: rotateY(0deg);
+}
+
+.show-back {
   transform: rotateY(180deg);
-  transition: transform 0.5s ease
-} */
+}
+
+
 
 .project-side-border {
   content: "";

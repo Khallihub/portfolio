@@ -1,4 +1,5 @@
 const Project = ({ project }) => {
+  
   if (!project)
     return (
       <div className="w-fit m-auto flex flex-col">
@@ -63,7 +64,7 @@ const Project = ({ project }) => {
     );
   return (
     <div
-      className="flex flex-col  justify-center md:w-4/6 px-4  procon"
+      className="flex flex-col  justify-center md:w-4/6 px-4  procon transition-box show-front"
       id="procon"
     >
       <div className="flex justify-between items-center">
@@ -117,7 +118,7 @@ const Project = ({ project }) => {
       <div className="flex">
         <div className="project-side-border"></div>
         <div className=" px-6 flex flex-col gap-6 justify-between">
-          <p className="text-xl font-mono font-light">{project.description}</p>
+          <p className="text-lg  font-mono font-extralight">{project.description}</p>
           <div className="flex justify-between">
             <div className=" flex justify-between">
               <div className="flex gap-2 flex-row justify-start items-start">

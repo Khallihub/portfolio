@@ -40,17 +40,17 @@ const Contact = () => {
     };
   }
 
-  function sendMail (e) {
-    e.preventDefault();
-    const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
-    const message = document.getElementById("message").value;
-    const data = {
-      name,
-      email,
-      message
-    }
-  }
+  // function sendMail (e) {
+  //   e.preventDefault();
+  //   const name = document.getElementById("name").value;
+  //   const email = document.getElementById("email").value;
+  //   const message = document.getElementById("message").value;
+  //   const data = {
+  //     name,
+  //     email,
+  //     message
+  //   }
+  // }
   return (
     <div className="flex justify-center items-center my-20">
       <div

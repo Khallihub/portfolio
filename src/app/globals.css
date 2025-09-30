@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+/* App scroll container: hides OS/browser scrollbars on viewport and allows internal scroll */
+.app-scroll {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* hide outer browser scroll */
+  position: relative;
+}
+
+/* Inner content scrolls, but scrollbar visuals are hidden */
+.app-scroll > * {
+  height: 100%;
+  overflow-y: auto; /* enable internal scrolling */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+/* Hide webkit scrollbars (Chrome, Edge, Safari) */
+.app-scroll > *::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Also ensure no outer scrollbar on root */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* prevent outer browser scrollbars */
+}
+
+/* Responsive site container for consistent widths */
+.site-container {
+  width: 100%;
+  max-width: 80rem; /* ~1280px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .site-container { padding-left: 1.25rem; padding-right: 1.25rem; }
+}
+@media (min-width: 1024px) {
+  .site-container { padding-left: 2rem; padding-right: 2rem; }
+}
+
+.footerBg {
+  background-blend-mode: multiply;
+  background-image: linear-gradient(270deg, #9f55ff, #7000ff, #8b31ff),
+    url("/footer-curve.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  transform: rotate(180deg);
+}
+
+.app-bg {
+  background-color: rgb(18, 14, 22);
+}
+
+.border-purple {
+  border-color: rgb(139, 49, 255);
+}
+
+.name {
+  content: "";
+  position: absolute;
+  bottom: 0.7rem;
+  left: 0;
+  width: 100%;
+  height: 0.35rem;
+  border-radius: 1rem;
+  background-image: linear-gradient(90deg, #9f55ff, #7000ff);
+  box-shadow: 0 0 1rem #7000ff;
+}
+
+.transition-box {
+  transition: transform 0.5s ease-in-out;
+  transform-style: preserve-3d;
+}
+
+.show-front {
+  transform: rotateY(0deg);
+}
+
+.show-back {
+  transform: rotateY(180deg);
+}
+
+
+
+.project-side-border {
+  content: "";
+  height: 100%;
+  width: 1rem;
+  border-radius: 1rem;
+  background-image: linear-gradient(90deg, #9f55ff, #7000ff);
+  box-shadow: 0 0 1rem #7000ff;
+}
+.list-border-left {
+  content: "";
+  position: absolute;
+  width: 8rem;
+  height: 0.2rem;
+  border-radius: 1rem;
+  background-image: linear-gradient(90deg, #9f55ff, #7000ff);
+  box-shadow: 0 0 1rem #7000ff;
+}
+.list-border-top {
+  content: "";
+  height: 8rem;
+  width: 0.2rem;
+  border-radius: 1rem;
+  background-image: linear-gradient(90deg, #9f55ff, #7000ff);
+  box-shadow: 0 0 1rem #7000ff;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #9f55ff, #7000ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.img {
+  max-width: 100%;
+  max-height: 100vh;
+}
+
+.contlg {
+  max-width: 768px;
+}
+
+.placeholder-label {
+  position: relative;
+  top: 2.5rem;
+  left: 1rem;
+  animation-name: label;
+  animation-duration: 1s;
+}
+
+.placeholder-label-focus {
+  position: relative;
+  bottom: 0;
+  right: 0;
+  animation-name: label;
+  animation-duration: 1s;
+  color: #9f55ff;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+:root {
+  --bar-width: 40px;
+  --bar-height: 6px;
+  --hamburger-gap: 6px;
+  --foreground: purple;
+  --background: white;
+  --hamburger-margin: 8px;
+  --animation-timing: 200ms ease-in-out;
+  --hamburger-height: calc(var(--bar-height) * 3 + var(--hamburger-gap) * 2);
+}
+
+.hamburger-menu {
+  --x-width: calc(var(--hamburger-height) * 1.41421356237);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--hamburger-gap);
+  width: max-content;
+  /* position: absolute;
+  top: var(--hamburger-margin);
+  right: var(--hamburger-margin);
+  z-index: 2; */
+  cursor: pointer;
+}
+
+.hamburger-menu:has(input:checked) {
+  --foreground: purple;
+  --background: none;
+}
+
+.hamburger-menu:has(input:focus-visible)::before,
+.hamburger-menu:has(input:focus-visible)::after,
+.hamburger-menu input:focus-visible {
+  border: 1px solid var(--background);
+  box-shadow: 0 0 0 1px var(--foreground);
+}
+
+.hamburger-menu::before,
+.hamburger-menu::after,
+.hamburger-menu input {
+  content: "";
+  width: var(--bar-width);
+  height: var(--bar-height);
+  background-color: var(--foreground);
+  border-radius: 9999px;
+  transform-origin: left center;
+  transition: opacity var(--animation-timing), width var(--animation-timing),
+    rotate var(--animation-timing), translate var(--animation-timing),
+    background-color var(--animation-timing);
+}
+
+.hamburger-menu input {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  pointer-events: none;
+}
+
+.hamburger-menu:has(input:checked)::before {
+  rotate: 45deg;
+  width: var(--x-width);
+  translate: 0 calc(var(--bar-height) / -2);
+}
+
+.hamburger-menu:has(input:checked)::after {
+  rotate: -45deg;
+  width: var(--x-width);
+  translate: 0 calc(var(--bar-height) / 2);
+}
+
+.hamburger-menu input:checked {
+  opacity: 0;
+  width: 0;
+}
+
+.sidebar {
+  transition: translate var(--animation-timing);
+  translate: -100%;
+  padding: 0.5rem 1rem;
+  padding-top: calc(var(--hamburger-height) + var(--hamburger-margin) + 1rem);
+  background-color: var(--foreground);
+  color: var(--background);
+  max-width: 10rem;
+  min-height: 100vh;
+}
+
+.hamburger-menu:has(input:checked) + .sidebar {
+  translate: 0;
+}
+.text-indigo-light {
+  --tw-text-opacity: 1;
+  color: rgba(159, 85, 255, var(--tw-text-opacity));
+}
+.auto-type {
+  font-size: 2rem;
+}

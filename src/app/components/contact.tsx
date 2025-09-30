@@ -1,0 +1,120 @@
+import React from "react";
+
+const Contact = () => {
+	function changeClass(label: string) {
+		let label1: string;
+		let label2: string;
+		if (label === "message") {
+			label1 = "name";
+			label2 = "email";
+		} else if (label === "name") {
+			label1 = "message";
+			label2 = "email";
+		} else {
+			label1 = "name";
+			label2 = "message";
+		}
+		return () => {
+			const labelElem = document.getElementById(`${label}Label`);
+			if (labelElem) {
+				labelElem.classList.add("placeholder-label-focus");
+				labelElem.classList.remove("placeholder-label");
+			}
+			const input1 = document.getElementById(label1) as HTMLInputElement | HTMLTextAreaElement | null;
+			const label1Elem = document.getElementById(`${label1}Label`);
+			if (input1 && label1Elem && input1.value === "") {
+				label1Elem.classList.remove("placeholder-label-focus");
+				label1Elem.classList.add("placeholder-label");
+			}
+			const input2 = document.getElementById(label2) as HTMLInputElement | HTMLTextAreaElement | null;
+			const label2Elem = document.getElementById(`${label2}Label`);
+			if (input2 && label2Elem && input2.value === "") {
+				label2Elem.classList.remove("placeholder-label-focus");
+				label2Elem.classList.add("placeholder-label");
+			}
+		};
+	}
+
+	// function sendMail (e) {
+	//   e.preventDefault();
+	//   const name = document.getElementById("name").value;
+	//   const email = document.getElementById("email").value;
+	//   const message = document.getElementById("message").value;
+	//   const data = {
+	//     name,
+	//     email,
+	//     message
+	//   }
+	// }
+	return (
+		<div className="flex justify-center items-center my-20">
+			<div
+				id="contact"
+				className="site-container min-h-screen flex flex-col p-6 "
+			>
+				<div className="pl-6 flex flex-col gap-4 sm:h-48">
+					<div className="self-start">
+						<h1 className="tracking-wider text-gradient text-6xl mt-2 font-medium ">
+							Contact
+						</h1>
+					</div>
+					<h2 className="text-white text-3xl pl-2">Get In Touch.</h2>
+				</div>
+				<form className="flex flex-col justify-between sm:h-3/4 items-center w-full py-6 text-white">
+					<div className="w-full p-6 sm:p-6">
+						<label htmlFor="name" id="nameLabel" className="placeholder-label">
+							Name
+						</label>
+						<input
+							type="text"
+							id="name"
+							required
+							className="block w-full h-12 sm:h-14 px-4 text-xl sm:text-2xl font-mono outline-none border-2 hover:border-white border-purple bg-transparent rounded-[0.6rem] transition-all duration-200 focus:bg-gray-dark-5 active:bg-gray-dark-5"
+							onFocus={changeClass("name")}
+						/>
+					</div>
+					<div className="w-full p-6 sm:p-6">
+						<label
+							htmlFor="email"
+							id="emailLabel"
+							className="placeholder-label"
+						>
+							Email
+						</label>
+						<input
+							type="email"
+							id="email"
+							required
+							className="block w-full h-12 sm:h-14 px-4 text-xl sm:text-2xl font-mono outline-none border-2 hover:border-white border-purple bg-transparent rounded-[0.6rem] transition-all duration-200 focus:bg-gray-dark-5 active:bg-gray-dark-5"
+							onFocus={changeClass("email")}
+						/>
+					</div>
+					<div className="w-full p-6 sm:p-6">
+						<label
+							htmlFor="message"
+							id="messageLabel"
+							className="placeholder-label"
+						>
+							Message
+						</label>
+						<textarea
+							id="message"
+							required
+							className="block w-full h-auto min-h-[10rem] max-h-[20rem] sm:h-14 py-2 px-4 text-xl sm:text-2xl hover:border-white font-mono outline-none border-2 border-purple bg-transparent rounded-[0.6rem] transition-all duration-200 focus:bg-gray-dark-5 active:bg-gray-dark-5"
+							onFocus={changeClass("message")}
+						></textarea>
+					</div>
+					<div className="p-4">
+						<button type="submit">
+							<span className="text-xl sm:text-2xl font-mono text-white bg-purple border-2 border-purple hover:border-white shadow-lg rounded-[0.6rem] px-10 py-2 mt-10 transition-all duration-200 hover:bg-transparent hover:text-purple">
+								Send
+							</span>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	);
+};
+
+export default Contact;

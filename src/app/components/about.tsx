@@ -9,7 +9,9 @@ const About = () => {
 							ABOUT
 						</h1>
 						<p className="text-lg md:text-xl mt-6 pt-6 border-t-2 max-w-prose leading-relaxed">
-							I am a full‑stack developer focused on crafting user‑centric, performant web experiences. I enjoy turning complex problems into intuitive interfaces and building reliable services behind the scenes. Recently, I completed UT Austin’s coding bootcamp (MERN) and I’m looking to contribute to a collaborative team.
+							I am a full-stack software engineer with a strong foundation in building <strong>scalable and user-friendly applications</strong>. I graduated from <strong>Addis Ababa University with a degree in Software Engineering </strong> and have experience across both <strong>frontend and backend development</strong> as well as modern tools for deployment, testing, and automation.
+							<br /><br />
+							I am passionate about writing clean, efficient code and collaborating with teams to deliver high-quality solutions. I am currently seeking opportunities to contribute my skills and grow as a developer while creating meaningful software.
 						</p>
 					</div>
 					<div className="w-full md:w-1/4 flex items-start justify-start md:justify-end">

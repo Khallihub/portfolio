@@ -1,3 +1,4 @@
+import React from "react";
 interface Tech {
   name: string;
   imageUrl: string;
@@ -140,7 +141,7 @@ const Project: React.FC<ProjectProps> = ({ project }) => {
                   <div className="h-1/5" key={tech.name}>
                     <img
                       height={50}
-                      className="h-full"
+                      className="h-full w-auto"
                       src={tech.imageUrl}
                       alt={tech.imageUrl}
                     />

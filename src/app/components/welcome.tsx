@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import Typed from "typed.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -5,7 +7,7 @@ import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 
 const Welcome = () => {
 	useEffect(() => {
-		let typed = new Typed(".auto-type", {
+		const typed = new Typed(".auto-type", {
 			strings: [
 				"I am a pragmatic Full Stack Developer",
 				"I build modern web and mobile apps",

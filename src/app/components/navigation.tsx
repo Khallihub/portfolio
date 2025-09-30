@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 type NavigationProps = {
@@ -5,7 +7,7 @@ type NavigationProps = {
   setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Navigation = ({ isChecked, setIsChecked }: NavigationProps) => {
+const Navigation = ({ setIsChecked }: Omit<NavigationProps, 'isChecked'>) => {
   const closeModal = () => {
     const checkbox = document.querySelector(".hamburger-menu input") as HTMLInputElement | null;
     if (checkbox) {
@@ -95,7 +97,7 @@ const NavigationModal = ({ isChecked, setIsChecked }: NavigationProps) => {
   if (!isChecked) return null;
   return (
     <div className="fixed inset-0 z-40 bg-[rgb(18,14,22)]/95">
-      <Navigation isChecked={isChecked} setIsChecked={setIsChecked} />
+      <Navigation setIsChecked={setIsChecked} />
     </div>
   );
 };

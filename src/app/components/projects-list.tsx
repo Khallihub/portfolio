@@ -1,3 +1,5 @@
+import { Project } from "../types/project.type";
+
 interface ProjectsListProps {
     projects: Project[];
     onSwitch: (id: Project['id']) => () => void;

@@ -99,7 +99,7 @@ const Footer = () => {
           </a>
         </div>
         <div>
-          <a href="#contact" className="border-4 border-white text-white px-8 py-2 rounded-xl mb-4 md:mb-8 hover:border-black">Let's Talk</a>
+          <a href="#contact" className="border-4 border-white text-white px-8 py-2 rounded-xl mb-4 md:mb-8 hover:border-black">Let&apos;s Talk</a>
         </div>
         <div className="flex justify-center items-center">
           <p className="text-white text-center">

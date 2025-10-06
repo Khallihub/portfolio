@@ -47,7 +47,7 @@ const Contact = () => {
 	//   }
 	// }
 	return (
-		<div className="flex justify-center items-center my-20">
+		<div className="flex justify-center items-center min-h-screen py-20">
 			<div
 				id="contact"
 				className="site-container min-h-screen flex flex-col p-6 "
@@ -60,7 +60,7 @@ const Contact = () => {
 					</div>
 					<h2 className="text-white text-3xl pl-2">Get In Touch.</h2>
 				</div>
-				<form className="flex flex-col justify-between sm:h-3/4 items-center w-full py-6 text-white">
+				<form className="flex flex-col justify-between sm:h-3/4 items-center w-full max-w-2xl mx-auto py-6 text-white">
 					<div className="w-full p-6 sm:p-6">
 						<label htmlFor="name" id="nameLabel" className="placeholder-label">
 							Name

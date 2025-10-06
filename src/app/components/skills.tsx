@@ -75,7 +75,7 @@ const Skills: React.FC = () => {
   return (
     <div
       id="skills"
-      className="site-container h-fit flex flex-col justify-center relative"
+      className="site-container min-h-screen flex flex-col justify-center relative"
     >
       <Image
         src="/right-pattern.svg"

@@ -72,7 +72,7 @@ const Projects = () => {
   return (
     <div
       id="projects"
-      className="site-container h-fit flex flex-col justify-center py-3"
+      className="site-container min-h-screen flex flex-col justify-center py-3"
     >
       <h1 className="tracking-wider text-gradient text-6xl my-2 py-2 font-mono font-medium">
         Projects

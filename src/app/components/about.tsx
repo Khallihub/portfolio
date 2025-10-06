@@ -1,7 +1,7 @@
 
 const About = () => {
 	return (
-		<div id="about" className="w-screen">
+		<div id="about" className="w-screen min-h-screen">
 			<div className="site-container py-4 md:py-10">
 				<div className="flex flex-col-reverse md:flex-row items-stretch gap-8 md:gap-12">
 					<div className="w-full h-full self-center text-white md:w-3/4">

@@ -37,7 +37,7 @@ export const fadeRight: Variants = {
   },
 };
 
-export const scaleIn: Variants = {
+export const scaleEntrance: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: {
     opacity: 1,
@@ -68,6 +68,33 @@ export const staggerFast: Variants = {
   },
 };
 
+export const staggerDelayed: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    },
+  },
+};
+
+// ─── Interaction Variants ───────────────────────────────────────────────────
+
+export const hoverScale: Variants = {
+  hover: {
+    scale: 1.02,
+    y: -5,
+    transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+export const tapScale: Variants = {
+  tap: {
+    scale: 0.98,
+    transition: { duration: 0.1, ease: "easeInOut" },
+  },
+};
+
 // ─── Hero-specific ───────────────────────────────────────────────────────────
 
 export const heroHeadline: Variants = {
@@ -81,7 +108,8 @@ export const heroHeadline: Variants = {
 
 // ─── Viewport defaults (once: true — trigger only on first scroll into view) ─
 
-export const viewportOnce = { once: true, amount: 0.2 } as const;
+export const viewportOnce = { once: true, amount: 0.1 } as const;
+export const viewportFlexible = { once: true, amount: 0.05 } as const;
 
 // ─── Reduced-motion safe variants ─────────────────────────────────────────────
 // Pass these into motion components instead of the originals when

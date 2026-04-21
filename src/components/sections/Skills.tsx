@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { fadeUp, staggerContainer, staggerFast, viewportOnce, motionNone } from "@/lib/animations";
+import { fadeUp, staggerContainer, staggerFast, viewportOnce, motionNone, scaleEntrance } from "@/lib/animations";
 
 interface Skill {
   id: string;
@@ -71,23 +71,31 @@ export default function Skills({ skills }: SkillsProps) {
                 initial="hidden"
                 whileInView="visible"
                 viewport={viewportOnce}
-                className="bg-[#1E293B] rounded-2xl border border-[var(--color-border)] p-6"
+                className="bg-[#1E293B] rounded-3xl border border-[var(--color-border)] p-8 hover:border-[#22C55E]/40 transition-all duration-300 shadow-xl"
               >
-                <h3 className="font-archivo text-sm font-semibold text-[#22C55E] tracking-widest uppercase mb-5">
-                  {category}
-                </h3>
-                <motion.div
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-10 h-10 rounded-xl bg-[#22C55E]/5 border border-[#22C55E]/10 flex items-center justify-center">
+                    <span className="text-[#22C55E] text-lg font-bold">
+                      {category[0]}
+                    </span>
+                  </div>
+                  <h3 className="font-archivo text-xl font-bold uppercase tracking-wider text-[#F8FAFC]">
+                    {category}
+                  </h3>
+                </div>
+                <motion.div 
                   variants={shouldReduce ? motionNone : staggerFast}
                   initial="hidden"
                   whileInView="visible"
                   viewport={viewportOnce}
-                  className="flex flex-wrap gap-2.5"
+                  className="flex flex-wrap gap-3"
                 >
                   {catSkills.map((skill) => (
                     <motion.span
                       key={skill.id}
-                      variants={shouldReduce ? motionNone : fadeUp}
-                      className="px-3.5 py-1.5 rounded-xl bg-[#0F172A] border border-[var(--color-border)] text-[#F8FAFC] text-sm font-medium hover:border-[#22C55E]/50 hover:text-[#22C55E] transition-colors duration-200 cursor-default"
+                      variants={shouldReduce ? motionNone : scaleEntrance}
+                      whileHover={{ scale: 1.1, backgroundColor: "rgba(34, 197, 94, 0.1)", borderColor: "rgba(34, 197, 94, 0.4)" }}
+                      className="px-4 py-2 rounded-xl bg-[#0F172A] border border-[#334155] text-[#94A3B8] text-sm font-semibold transition-all cursor-default"
                     >
                       {skill.name}
                     </motion.span>

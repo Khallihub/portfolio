@@ -74,9 +74,15 @@ export default function Experience({ experiences }: ExperienceProps) {
           className="relative"
         >
           {/* Vertical line */}
-          <div className="absolute left-6 top-3 bottom-3 w-px bg-gradient-to-b from-[#22C55E] via-[#334155] to-transparent hidden md:block" />
+          <motion.div 
+            initial={{ height: 0 }}
+            whileInView={{ height: "100%" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            viewport={viewportOnce}
+            className="absolute left-6 top-3 w-px bg-gradient-to-b from-[#22C55E] via-[#334155] to-transparent hidden md:block" 
+          />
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-12">
             {experiences.map((exp) => (
               <motion.div
                 key={exp.id}
@@ -85,66 +91,78 @@ export default function Experience({ experiences }: ExperienceProps) {
               >
                 {/* Timeline dot */}
                 <div className="absolute left-[18.5px] top-4 hidden md:flex items-center justify-center">
-                  <div className="w-3 h-3 rounded-full bg-[#22C55E] ring-4 ring-[#0F172A] group-hover:ring-[#22C55E]/20 transition-all duration-300" />
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={viewportOnce}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 300, damping: 20 }}
+                    className="w-3 h-3 rounded-full bg-[#22C55E] ring-4 ring-[#0F172A] group-hover:ring-[#22C55E]/20 transition-all duration-300" 
+                  />
                 </div>
 
                 <Link href={`/experience/${exp.slug}`} className="block">
-                  <article className="bg-[#1E293B] rounded-2xl border border-[var(--color-border)] p-6 hover:border-[#22C55E]/40 transition-all duration-300 cursor-pointer">
-                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+                  <motion.article 
+                    whileHover={{ x: 10 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-[#1E293B] rounded-3xl border border-[var(--color-border)] p-8 hover:border-[#22C55E]/40 transition-all duration-300 cursor-pointer shadow-xl hover:shadow-[#22C55E]/5"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
                       <div>
-                        <h3 className="font-archivo text-xl font-semibold group-hover:text-[#22C55E] transition-colors duration-200">
+                        <h3 className="font-archivo text-2xl font-bold group-hover:text-[#22C55E] transition-colors duration-200">
                           {exp.role}
                         </h3>
-                        <div className="flex items-center gap-3 mt-1 text-[#94A3B8] text-sm">
-                          <span className="font-medium text-[#F8FAFC]">
+                        <div className="flex items-center gap-3 mt-2 text-[#94A3B8] text-sm">
+                          <span className="font-semibold text-[#F8FAFC] px-3 py-1 bg-[#0F172A] rounded-lg border border-[#334155]">
                             {exp.company}
                           </span>
                           {exp.location && (
-                            <>
-                              <span>·</span>
-                              <span className="flex items-center gap-1">
-                                <MapPin size={12} />
-                                {exp.location}
-                              </span>
-                            </>
+                            <span className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                              <MapPin size={14} className="text-[#22C55E]" />
+                              {exp.location}
+                            </span>
                           )}
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-sm text-[#94A3B8]">
+                      <div className="sm:text-right shrink-0">
+                        <p className="text-sm font-bold text-[#F8FAFC]">
                           {formatDate(exp.startDate)} —{" "}
                           {exp.endDate ? formatDate(exp.endDate) : "Present"}
                         </p>
-                        <p className="text-xs text-[#22C55E] font-medium mt-0.5">
+                        <p className="text-xs text-[#22C55E] font-bold tracking-widest uppercase mt-1">
                           {getYearSpan(exp.startDate, exp.endDate)}
                         </p>
                       </div>
                     </div>
 
-                    <p className="text-[#94A3B8] text-sm leading-relaxed mb-4 text-justify tracking-wide">
+                    <p className="text-[#94A3B8] text-base leading-relaxed mb-6 text-justify tracking-wide">
                       {exp.description}
                     </p>
 
                     {exp.highlights.length > 0 && (
-                      <ul className="flex flex-col gap-1.5 mb-4">
+                      <ul className="flex flex-col gap-3 mb-8">
                         {exp.highlights.slice(0, 3).map((h, i) => (
-                          <li
+                          <motion.li
                             key={i}
-                            className="flex items-start gap-2 text-sm text-[#94A3B8]"
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={viewportOnce}
+                            transition={{ delay: 0.1 * i }}
+                            className="flex items-start gap-3 text-sm text-[#94A3B8]"
                           >
-                            <span className="text-[#22C55E] mt-0.5 shrink-0">
+                            <span className="text-[#22C55E] mt-1 shrink-0 font-bold">
                               ▸
                             </span>
                             {h}
-                          </li>
+                          </motion.li>
                         ))}
                       </ul>
                     )}
 
-                    <div className="flex items-center gap-1 text-[#22C55E] text-sm font-medium">
-                      View full story <ArrowRight size={14} />
+                    <div className="flex items-center gap-2 text-[#22C55E] text-sm font-bold group/link">
+                      <span>Explore full journey</span> 
+                      <ArrowRight size={16} className="group-hover/link:translate-x-2 transition-transform duration-300" />
                     </div>
-                  </article>
+                  </motion.article>
                 </Link>
               </motion.div>
             ))}

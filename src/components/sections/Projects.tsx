@@ -82,6 +82,8 @@ export default function Projects({ projects, hideHeader = false }: ProjectsProps
             <motion.article
               key={project.id}
               variants={shouldReduce ? motionNone : fadeUp}
+              whileHover={shouldReduce ? {} : "hover"}
+              whileTap={shouldReduce ? {} : "tap"}
               className="group relative bg-[#1E293B] rounded-3xl border border-[var(--color-border)] overflow-hidden hover:border-[#22C55E]/40 transition-all duration-500 cursor-pointer flex flex-col h-full shadow-lg hover:shadow-[#22C55E]/5"
             >
               <Link href={`/project/${project.slug}`} className="flex flex-col h-full">

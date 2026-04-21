@@ -2,7 +2,7 @@
 
 A premium, modern developer portfolio built with **Next.js 16**, **Prisma 7**, and **PostgreSQL**. Designed for maximum visual impact, blazing-fast performance, and extreme ease of management via a custom admin dashboard.
 
-![Portfolio Preview](https://antgravity.vercel.app/og.png) *(Placeholder image link)*
+![Portfolio Preview](https://antgravity.vercel.app/og.png) _(Placeholder image link)_
 
 ## ✨ Key Features
 

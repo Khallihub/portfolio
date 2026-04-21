@@ -112,7 +112,7 @@ export default function Projects({ projects, hideHeader = false }: ProjectsProps
                   <h3 className="font-archivo text-2xl font-bold mb-3 group-hover:text-[#22C55E] transition-colors duration-200">
                     {project.title}
                   </h3>
-                  <p className="text-[#94A3B8] text-sm leading-relaxed mb-6 flex-grow">
+                  <p className="text-[#94A3B8] text-sm leading-relaxed mb-6 flex-grow text-justify tracking-wide">
                     {project.shortDescription}
                   </p>
 

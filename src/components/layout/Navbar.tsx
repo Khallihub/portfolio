@@ -89,7 +89,7 @@ export default function Navbar() {
               }}
               className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#22C55E] text-[#0F172A] text-sm font-semibold hover:bg-[#16A34A] transition-colors duration-200 cursor-pointer"
             >
-              Hire Me
+              Book a Call
             </Link>
             <button
               id="nav-menu-toggle"
@@ -138,7 +138,7 @@ export default function Navbar() {
                   }}
                   className="block text-center py-3 rounded-xl bg-[#22C55E] text-[#0F172A] font-semibold hover:bg-[#16A34A] transition-colors duration-200 cursor-pointer"
                 >
-                  Hire Me
+                  Book a Call
                 </Link>
               </li>
             </ul>

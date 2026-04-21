@@ -40,6 +40,8 @@ export async function PUT(request: Request) {
   try {
     const body = await request.json();
     const { id, ...data } = body;
+    if (!id) return NextResponse.json({ error: "ID required for update" }, { status: 400 });
+
     const updated = await prisma.experience.update({
       where: { id },
       data: {

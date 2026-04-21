@@ -20,23 +20,27 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 async function getData() {
-  const [sections, hero, about, projects, experiences, skills, education, contactConfig] =
-    await Promise.all([
-      prisma.section.findMany({
-        where: { isVisible: true },
-        orderBy: { order: "asc" },
-      }),
-      prisma.heroContent.findFirst(),
-      prisma.aboutContent.findFirst(),
-      prisma.project.findMany({
-        where: { isFeatured: true },
-        orderBy: { order: "asc" },
-      }),
-      prisma.experience.findMany({ orderBy: { order: "asc" } }),
-      prisma.skill.findMany({ orderBy: { category: "asc" } }),
-      prisma.education.findMany({ orderBy: { startYear: "desc" } }),
-      prisma.contactConfig.findFirst(),
-    ]);
+  // We fetch core layout data first, then content. 
+  // This reduces the number of concurrent connections opened at once.
+  const [sections, hero, about, contactConfig] = await Promise.all([
+    prisma.section.findMany({
+      where: { isVisible: true },
+      orderBy: { order: "asc" },
+    }),
+    prisma.heroContent.findFirst(),
+    prisma.aboutContent.findFirst(),
+    prisma.contactConfig.findFirst(),
+  ]);
+
+  const [projects, experiences, skills, education] = await Promise.all([
+    prisma.project.findMany({
+      where: { isFeatured: true },
+      orderBy: { order: "asc" },
+    }),
+    prisma.experience.findMany({ orderBy: { order: "asc" } }),
+    prisma.skill.findMany({ orderBy: { category: "asc" } }),
+    prisma.education.findMany({ orderBy: { startYear: "desc" } }),
+  ]);
 
   return { sections, hero, about, projects, experiences, skills, education, contactConfig };
 }

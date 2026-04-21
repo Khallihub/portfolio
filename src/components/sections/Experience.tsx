@@ -121,7 +121,7 @@ export default function Experience({ experiences }: ExperienceProps) {
                       </div>
                     </div>
 
-                    <p className="text-[#94A3B8] text-sm leading-relaxed mb-4">
+                    <p className="text-[#94A3B8] text-sm leading-relaxed mb-4 text-justify tracking-wide">
                       {exp.description}
                     </p>
 

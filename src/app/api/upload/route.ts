@@ -20,6 +20,11 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(blob);
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    const message = (error as Error).message;
+    console.error("[UPLOAD_API_ERROR]", message);
+    return NextResponse.json({ 
+      error: message,
+      hint: message.includes("token") ? "Check your BLOB_READ_WRITE_TOKEN in .env" : "Ensure your store is set to Public"
+    }, { status: 500 });
   }
 }

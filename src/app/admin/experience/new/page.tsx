@@ -28,9 +28,10 @@ const INITIAL_DATA: ExperienceData = {
   highlights: [],
 };
 
-export default function ExperienceFormPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ExperienceFormPage({ params }: { params: Promise<{ id?: string }> }) {
   const resolvedParams = use(params);
-  const isNew = resolvedParams.id === "new";
+  // It's a new entry if the ID is missing (from the /new route) or explicitly 'new'
+  const isNew = !resolvedParams?.id || resolvedParams.id === "new";
   const router = useRouter();
   
   const [data, setData] = useState<ExperienceData>(INITIAL_DATA);

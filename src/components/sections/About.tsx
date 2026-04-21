@@ -47,7 +47,9 @@ export default function About({ statement, bio }: AboutProps) {
               viewport={viewportOnce}
               transition={{ delay: 0.15 }}
             >
-              <p className="text-[#94A3B8] text-lg leading-relaxed">{bio}</p>
+              <p className="text-[#94A3B8] text-lg leading-relaxed text-justify tracking-wide">
+                {bio}
+              </p>
 
               {/* Decorative accent line */}
               <div className="mt-8 h-px bg-gradient-to-r from-[#22C55E] to-transparent" />

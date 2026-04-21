@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Section {
+  id        String  @id @default(uuid())
+  type      String
+  title     String
+  order     Int
+  isVisible Boolean @default(true)
+  config    Json?
+
+  @@map("sections")
+}
+
+model HeroContent {
+  id          String  @id @default(uuid())
+  headline    String
+  subheadline String?
+  ctaText     String?
+  ctaLink     String?
+
+  @@map("hero_content")
+}
+
+model AboutContent {
+  id        String  @id @default(uuid())
+  statement String
+  bio       String?
+  avatarUrl String?
+
+  @@map("about_content")
+}
+
+model Project {
+  id               String   @id @default(uuid())
+  title            String
+  slug             String   @unique
+  shortDescription String
+  fullStory        String?
+  coverImage       String?
+  videoUrl         String?
+  demoUrl          String?
+  githubUrl        String?
+  techStack        String[]
+  challenges       String?
+  outcomes         String?
+  isFeatured       Boolean  @default(false)
+  order            Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  @@map("projects")
+}
+
+model Experience {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  role        String
+  company     String
+  companyLogo String?
+  location    String?
+  description String
+  fullStory   String?
+  highlights  String[]
+  startDate   DateTime
+  endDate     DateTime?
+  order       Int       @default(0)
+
+  @@map("experiences")
+}
+
+model Skill {
+  id       String @id @default(uuid())
+  category String
+  name     String
+  level    Int?
+
+  @@map("skills")
+}
+
+model Education {
+  id          String @id @default(uuid())
+  institution String
+  degree      String
+  description String?
+  startYear   Int
+  endYear     Int?
+
+  @@map("education")
+}
+
+model ContactConfig {
+  id          String  @id @default(uuid())
+  email       String
+  ctaText     String?
+  githubUrl   String?
+  linkedinUrl String?
+  twitterUrl  String?
+
+  @@map("contact_config")
+}
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+
+  @@map("contact_submissions")
+}
+
+// NextAuth required tables
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  isAdmin       Boolean   @default(false)
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}

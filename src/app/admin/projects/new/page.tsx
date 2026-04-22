@@ -67,7 +67,7 @@ export default function ProjectFormPage({ params }: { params: Promise<{ id?: str
       // In a real app we'd have a specific GET endpoint but we can use the main one.
       fetch("/api/admin/projects")
         .then((res) => res.json())
-        .then((projects: { id: string; title?: string; slug?: string; shortDescription?: string; fullStory?: string; challenges?: string; outcomes?: string; videoUrl?: string; demoUrl?: string; githubUrl?: string; techStack?: string[]; coverImage?: string; isFeatured?: boolean }[]) => {
+        .then((projects: { id: string; title?: string; slug?: string; shortDescription?: string; fullStory?: string; challenges?: string; outcomes?: string; videoUrl?: string; demoUrl?: string; githubUrl?: string; techStack?: string[]; coverImage?: string; gallery?: string[]; isFeatured?: boolean }[]) => {
           const project = projects.find((p) => p.id === resolvedParams.id);
           if (project) {
             setData({

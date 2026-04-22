@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -36,6 +36,7 @@ export async function PUT(request: Request) {
       updated = await prisma.heroContent.create({ data });
     }
 
+    revalidatePath("/");
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: "Failed to update hero content" }, { status: 500 });

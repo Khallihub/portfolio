@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -28,7 +28,7 @@ export async function PATCH(request: Request) {
         ...(order !== undefined && { order }),
       },
     });
-
+    revalidatePath("/");
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: "Failed to update section" }, { status: 500 });
@@ -52,7 +52,7 @@ export async function PUT(request: Request) {
         })
       )
     );
-
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to reorder sections" }, { status: 500 });

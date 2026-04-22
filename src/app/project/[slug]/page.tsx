@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 import { ArrowLeft, ExternalLink, Play } from "lucide-react";
 import { GitHub } from "@/components/ui/Icons";
+import Link from "next/link";
+import ProjectSlider from "@/components/ui/ProjectSlider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import type { Metadata } from "next";
@@ -99,18 +99,17 @@ export default async function ProjectPage({ params }: PageProps) {
             </div>
           </header>
 
-          {/* Cover image */}
-          {project.coverImage && (
-            <div className="relative h-72 md:h-96 rounded-2xl overflow-hidden mb-10 border border-[var(--color-border)]">
-              <Image
-                src={project.coverImage}
-                alt={project.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
+          {/* Gallery Slider */}
+          <div className="mb-12">
+            <ProjectSlider 
+              images={[
+                ...(project.coverImage ? [project.coverImage] : []),
+                ...(project.gallery || []),
+              ]} 
+              title={project.title}
+              aspectRatio="cover"
+            />
+          </div>
 
           {/* YouTube video */}
           {project.videoUrl && (

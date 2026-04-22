@@ -43,6 +43,7 @@ model Project {
   shortDescription String
   fullStory        String?
   coverImage       String?
+  gallery          String[] @default([])
   videoUrl         String?
   demoUrl          String?
   githubUrl        String?

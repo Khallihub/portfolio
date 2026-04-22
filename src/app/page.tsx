@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 async function getData() {
-  // We fetch core layout data first, then content. 
+  // We fetch core layout data first, then content.
   // This reduces the number of concurrent connections opened at once.
   const [sections, hero, about, contactConfig] = await Promise.all([
     prisma.section.findMany({
@@ -39,15 +39,24 @@ async function getData() {
     }),
     prisma.experience.findMany({ orderBy: { order: "asc" } }),
     prisma.skill.findMany({ orderBy: { category: "asc" } }),
-    prisma.education.findMany({ orderBy: { startYear: "desc" } }),
+    prisma.education.findMany({ orderBy: { startYear: "asc" } }),
   ]);
 
-  return { sections, hero, about, projects, experiences, skills, education, contactConfig };
+  return {
+    sections,
+    hero,
+    about,
+    projects,
+    experiences,
+    skills,
+    education,
+    contactConfig,
+  };
 }
 
 function renderSection(
   type: string,
-  data: Awaited<ReturnType<typeof getData>>
+  data: Awaited<ReturnType<typeof getData>>,
 ) {
   switch (type) {
     case "hero":
@@ -64,12 +73,18 @@ function renderSection(
     case "about":
       if (!data.about) return null;
       return (
-        <About key="about" statement={data.about.statement} bio={data.about.bio} />
+        <About
+          key="about"
+          statement={data.about.statement}
+          bio={data.about.bio}
+        />
       );
     case "projects":
       return <Projects key="projects" projects={data.projects} />;
     case "experience":
-      return <ExperienceSection key="experience" experiences={data.experiences} />;
+      return (
+        <ExperienceSection key="experience" experiences={data.experiences} />
+      );
     case "skills":
       return <Skills key="skills" skills={data.skills} />;
     case "education":

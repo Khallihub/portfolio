@@ -28,6 +28,7 @@ interface ProjectData {
   githubUrl: string;
   techStack: string[];
   coverImage: string;
+  gallery: string[];
   isFeatured: boolean;
 }
 
@@ -43,6 +44,7 @@ const INITIAL_DATA: ProjectData = {
   githubUrl: "",
   techStack: [],
   coverImage: "",
+  gallery: [],
   isFeatured: true,
 };
 
@@ -57,6 +59,7 @@ export default function ProjectFormPage({ params }: { params: Promise<{ id?: str
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [newTech, setNewTech] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
 
   useEffect(() => {
     if (!isNew) {
@@ -79,6 +82,7 @@ export default function ProjectFormPage({ params }: { params: Promise<{ id?: str
               githubUrl: project.githubUrl || "",
               techStack: project.techStack || [],
               coverImage: project.coverImage || "",
+              gallery: project.gallery || [],
               isFeatured: project.isFeatured ?? true,
             });
           }
@@ -104,6 +108,37 @@ export default function ProjectFormPage({ params }: { params: Promise<{ id?: str
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setGalleryUploading(true);
+    try {
+      const newUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const response = await fetch(`/api/upload?filename=${file.name}`, {
+          method: "POST",
+          body: file,
+        });
+        const blob = await response.json();
+        newUrls.push(blob.url);
+      }
+      setData((prev) => ({ ...data, gallery: [...prev.gallery, ...newUrls] }));
+    } catch (err) {
+      console.error("Gallery upload failed", err);
+    } finally {
+      setGalleryUploading(false);
+    }
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setData((prev) => ({
+      ...prev,
+      gallery: prev.gallery.filter((_, i) => i !== index),
+    }));
   };
 
   const addTech = () => {
@@ -312,6 +347,33 @@ export default function ProjectFormPage({ params }: { params: Promise<{ id?: str
                                 <input type="file" className="hidden" accept="image/*" onChange={handleUpload} />
                             </label>
                         )}
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold text-[#94A3B8] flex items-center justify-between">
+                        <span className="flex items-center gap-1"><ImageIcon size={12} /> Project Gallery</span>
+                        {galleryUploading && <Loader2 size={12} className="animate-spin text-[#22C55E]" />}
+                    </label>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                        {data.gallery.map((url, index) => (
+                            <div key={`${url}-${index}`} className="relative aspect-video rounded-lg border border-[#334155] overflow-hidden group">
+                                <img src={url} className="w-full h-full object-cover" alt="Gallery item" />
+                                <button 
+                                    type="button"
+                                    onClick={() => removeGalleryImage(index)}
+                                    className="absolute top-1 right-1 p-1 bg-red-500/80 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <X size={12} />
+                                </button>
+                            </div>
+                        ))}
+                        <label className="aspect-video rounded-lg border border-dashed border-[#334155] hover:border-[#22C55E]/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors group">
+                            {galleryUploading ? <Loader2 className="w-4 h-4 text-[#22C55E] animate-spin" /> : <Plus size={16} className="text-[#475569] group-hover:text-[#22C55E]" />}
+                            <span className="text-[10px] font-medium text-[#475569] group-hover:text-[#22C55E]">Add Images</span>
+                            <input type="file" className="hidden" accept="image/*" multiple onChange={handleGalleryUpload} />
+                        </label>
                     </div>
                 </div>
 

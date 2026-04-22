@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -27,6 +27,7 @@ export async function POST(request: Request) {
         order: (await prisma.experience.count()) + 1,
       },
     });
+    revalidatePath("/");
     return NextResponse.json(experience);
   } catch {
     return NextResponse.json({ error: "Failed to create experience" }, { status: 500 });
@@ -50,6 +51,7 @@ export async function PUT(request: Request) {
         endDate: data.endDate ? new Date(data.endDate) : null,
       },
     });
+    revalidatePath("/");
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: "Failed to update experience" }, { status: 500 });
@@ -66,6 +68,7 @@ export async function DELETE(request: Request) {
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
     await prisma.experience.delete({ where: { id } });
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to delete experience" }, { status: 500 });

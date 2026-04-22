@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 // ── Skills API ──────────────────────────────────────────────────────────────
 
@@ -20,6 +20,7 @@ export async function POST_SKILL(request: Request) {
   try {
     const body = await request.json();
     const skill = await prisma.skill.create({ data: body });
+    revalidatePath("/");
     return NextResponse.json(skill);
   } catch {
     return NextResponse.json({ error: "Failed to create skill" }, { status: 500 });
@@ -36,6 +37,7 @@ export async function DELETE_SKILL(request: Request) {
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
     await prisma.skill.delete({ where: { id } });
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to delete skill" }, { status: 500 });
@@ -60,6 +62,7 @@ export async function POST_EDUCATION(request: Request) {
   try {
     const body = await request.json();
     const edu = await prisma.education.create({ data: body });
+    revalidatePath("/");
     return NextResponse.json(edu);
   } catch {
     return NextResponse.json({ error: "Failed to create education" }, { status: 500 });
@@ -76,6 +79,7 @@ export async function DELETE_EDUCATION(request: Request) {
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
     await prisma.education.delete({ where: { id } });
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to delete education" }, { status: 500 });

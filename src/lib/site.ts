@@ -2,15 +2,24 @@
  * The site's public address, without a trailing slash. Canonical tags, the
  * sitemap, robots.txt and share links are all built from it, so it must be the
  * production domain. NEXT_PUBLIC_APP_URL wins; on Vercel, the project's
- * production domain is the fallback.
+ * production domain is the fallback. A bare host ("example.vercel.app") gets
+ * https:// added, since new URL() rejects it and that fails the build.
  */
 function siteUrl() {
-  const configured =
+  const configured = (
     process.env.NEXT_PUBLIC_APP_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000");
-  return configured.replace(/\/+$/, "");
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    "http://localhost:3000"
+  ).trim();
+  const withScheme = /^https?:\/\//i.test(configured) ? configured : `https://${configured}`;
+
+  try {
+    return new URL(withScheme).toString().replace(/\/+$/, "");
+  } catch {
+    throw new Error(
+      `NEXT_PUBLIC_APP_URL must be the site's address, like https://example.com (got "${configured}").`,
+    );
+  }
 }
 
 /**

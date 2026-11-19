@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getVisibleSections, toChapters, type Chapter } from "@/lib/content";
 import { groupSkills } from "@/lib/format";
 import { site } from "@/lib/site";
+import { pageMetadata } from "@/lib/seo";
 import SiteShell from "@/components/layout/SiteShell";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
@@ -12,9 +13,7 @@ import Skills from "@/components/sections/Skills";
 import Education from "@/components/sections/Education";
 import Contact from "@/components/sections/Contact";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/" },
-};
+export const metadata: Metadata = pageMetadata({ path: "/" });
 
 // Revalidate every hour; admin changes also call revalidatePath("/").
 export const revalidate = 3600;

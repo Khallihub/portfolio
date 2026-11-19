@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { Save, ArrowLeft, Loader2, Plus, CheckCircle, Trash2 } from "lucide-react";
+import { slugify } from "@/lib/format";
 
 interface ExperienceData {
   role: string;
@@ -137,8 +138,7 @@ export default function ExperienceFormPage({ params }: { params: Promise<{ id?: 
                         value={data.role}
                         onChange={(e) => {
                             const role = e.target.value;
-                            const slug = role.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "") + "-" + data.company.toLowerCase().replace(/ /g, "-");
-                            setData({ ...data, role, slug: isNew ? slug : data.slug });
+                            setData({ ...data, role, slug: isNew ? slugify(`${role} ${data.company}`) : data.slug });
                         }}
                         className="bg-[#0F172A] border border-[#334155] rounded-xl p-4 text-[#F8FAFC] focus:outline-none focus:border-[#22C55E]/60 transition-colors"
                         placeholder="e.g. Senior Software Engineer"
@@ -150,7 +150,11 @@ export default function ExperienceFormPage({ params }: { params: Promise<{ id?: 
                         type="text"
                         required
                         value={data.company}
-                        onChange={(e) => setData({ ...data, company: e.target.value })}
+                        onChange={(e) => {
+                            const company = e.target.value;
+                            // Rebuild here too, so typing the role first doesn't leave "role-".
+                            setData({ ...data, company, slug: isNew ? slugify(`${data.role} ${company}`) : data.slug });
+                        }}
                         className="bg-[#0F172A] border border-[#334155] rounded-xl p-4 text-[#F8FAFC] focus:outline-none focus:border-[#22C55E]/60 transition-colors"
                         placeholder="e.g. Acme Corp"
                     />

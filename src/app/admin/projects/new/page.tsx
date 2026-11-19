@@ -15,6 +15,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { GitHub } from "@/components/ui/Icons";
+import { slugify } from "@/lib/format";
 
 interface ProjectData {
   title: string;
@@ -220,8 +221,7 @@ export default function ProjectFormPage({ params }: { params: Promise<{ id?: str
                 value={data.title}
                 onChange={(e) => {
                     const title = e.target.value;
-                    const slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
-                    setData({ ...data, title, slug: isNew ? slug : data.slug });
+                    setData({ ...data, title, slug: isNew ? slugify(title) : data.slug });
                 }}
                 className="bg-[#0F172A] border border-[#334155] rounded-xl p-4 text-[#F8FAFC] focus:outline-none focus:border-[#22C55E]/60 transition-colors"
                 placeholder="e.g. Next-Gen Commerce"

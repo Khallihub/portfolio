@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";
 import { getChapters } from "@/lib/content";
 import { toYouTubeEmbed } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 import SiteShell from "@/components/layout/SiteShell";
 import { CaseRows, CaseTitle, Figure, FigureImage } from "@/components/work/CaseParts";
 
@@ -19,17 +20,14 @@ export async function generateMetadata(props: PageProps<"/project/[slug]">): Pro
   const { slug } = await props.params;
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) return {};
-  return {
+  return pageMetadata({
     title: project.title,
     description: project.shortDescription,
-    alternates: { canonical: `/project/${project.slug}` },
-    openGraph: {
-      type: "article",
-      title: project.title,
-      description: project.shortDescription,
-      images: project.coverImage ? [project.coverImage] : [],
-    },
-  };
+    path: `/project/${project.slug}`,
+    image: project.coverImage,
+    imageAlt: `Cover image for ${project.title}`,
+    type: "article",
+  });
 }
 
 export default async function ProjectPage(props: PageProps<"/project/[slug]">) {

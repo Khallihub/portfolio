@@ -58,11 +58,18 @@ export default function Hero({
         <p className="folio-text text-[21px] leading-[1.45] text-pretty text-muted md:text-[24px]">
           {deck}
         </p>
-        {ctaText && (
-          <p className="folio-text">
-            <Link href={ctaLink || "/#projects"} className="link italic">
-              {ctaText} →
-            </Link>
+        {(ctaText || site.resume) && (
+          <p className="folio-text flex flex-wrap items-baseline gap-x-9 gap-y-3">
+            {ctaText && (
+              <Link href={ctaLink || "/#projects"} className="link italic">
+                {ctaText} →
+              </Link>
+            )}
+            {site.resume && (
+              <a href={site.resume} type="application/pdf" className="link italic text-muted">
+                Résumé <span className="sc not-italic">PDF</span>
+              </a>
+            )}
           </p>
         )}
       </div>

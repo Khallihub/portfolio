@@ -3,14 +3,16 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getChapters } from "@/lib/content";
 import { pad2 } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
+import { site } from "@/lib/site";
 import SiteShell from "@/components/layout/SiteShell";
 import { CaseTitle } from "@/components/work/CaseParts";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "All projects",
-  description: "Browse the full collection of projects and case studies.",
-  alternates: { canonical: "/projects" },
-};
+  description: `Every project and case study by ${site.name}, ${site.role.toLowerCase()}.`,
+  path: "/projects",
+});
 
 export const revalidate = 3600;
 

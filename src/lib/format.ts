@@ -165,3 +165,13 @@ export function textBlocks(text: string): TextBlock[] {
   }
   return blocks;
 }
+
+/** URL slug: lowercase ASCII words joined by single hyphens, none at the ends. */
+export function slugify(text: string) {
+  return text
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}

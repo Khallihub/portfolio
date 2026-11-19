@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { Chapter } from "@/lib/content";
+import { site } from "@/lib/site";
 
 interface ContactConfig {
   email: string;
@@ -163,10 +164,17 @@ export default function Contact({ chapter, config }: ContactProps) {
           </div>
         </form>
 
-        {socials.length > 0 && (
+        {(socials.length > 0 || site.resume) && (
           <div className="folio-note note lg:self-end">
             <p className="sc mb-1.5">Elsewhere</p>
             <ul className="flex flex-col gap-1 text-[14px]">
+              {site.resume && (
+                <li>
+                  <a href={site.resume} type="application/pdf" className="link text-bone">
+                    Résumé (PDF)
+                  </a>
+                </li>
+              )}
               {socials.map((social) => (
                 <li key={social.label}>
                   <a href={social.href} className="link text-bone" rel="noopener noreferrer">

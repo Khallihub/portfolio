@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";
 import { getChapters } from "@/lib/content";
 import { duration, monthRange } from "@/lib/format";
+import { pageMetadata } from "@/lib/seo";
 import SiteShell from "@/components/layout/SiteShell";
 
 export const revalidate = 3600;
@@ -20,11 +21,12 @@ export async function generateMetadata(
   const { slug } = await props.params;
   const exp = await prisma.experience.findUnique({ where: { slug } });
   if (!exp) return {};
-  return {
+  return pageMetadata({
     title: `${exp.role} at ${exp.company}`,
     description: exp.description,
-    alternates: { canonical: `/experience/${exp.slug}` },
-  };
+    path: `/experience/${exp.slug}`,
+    type: "article",
+  });
 }
 
 export default async function ExperiencePage(props: PageProps<"/experience/[slug]">) {

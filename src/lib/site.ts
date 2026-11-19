@@ -3,7 +3,7 @@
  * name or role, so they live here. Edit these values to rebrand the site.
  */
 export const site = {
-  name: "Khalid Abdu",
+  name: "Khalid Kemal",
   role: "Full-stack engineer",
   /** Short line used when the hero subheadline is empty and for metadata. */
   description:

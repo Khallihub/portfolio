@@ -1,29 +1,35 @@
-"use client";
+import type { Metadata } from "next";
+import { Archivo, Space_Grotesk } from "next/font/google";
+import AdminShell from "@/components/admin/AdminShell";
 
-import { SessionProvider } from "next-auth/react";
-import AdminSidebar from "@/components/admin/Sidebar";
-import { usePathname } from "next/navigation";
+// The admin keeps its original typefaces; they load only on /admin routes.
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Admin",
+  robots: { index: false, follow: false },
+};
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isLoginPage = pathname === "/admin/login";
-
-  if (isLoginPage) {
-    return <SessionProvider>{children}</SessionProvider>;
-  }
-
   return (
-    <SessionProvider>
-      <div className="flex min-h-screen bg-[#0F172A] text-[#F8FAFC]">
-        <AdminSidebar />
-        <main className="flex-1 ml-64 p-8 lg:p-12">
-          {children}
-        </main>
-      </div>
-    </SessionProvider>
+    <div className={`${archivo.variable} ${spaceGrotesk.variable} admin-root`}>
+      <AdminShell>{children}</AdminShell>
+    </div>
   );
 }

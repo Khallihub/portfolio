@@ -1,33 +1,30 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";
-import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Play } from "lucide-react";
-import { GitHub } from "@/components/ui/Icons";
-import Link from "next/link";
-import ProjectSlider from "@/components/ui/ProjectSlider";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import type { Metadata } from "next";
+import { getChapters } from "@/lib/content";
+import { toYouTubeEmbed } from "@/lib/format";
+import SiteShell from "@/components/layout/SiteShell";
+import { CaseRows, CaseTitle, Figure, FigureImage } from "@/components/work/CaseParts";
 
 export const revalidate = 3600;
-
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
 
 export async function generateStaticParams() {
   const projects = await prisma.project.findMany({ select: { slug: true } });
   return projects.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata(props: PageProps<"/project/[slug]">): Promise<Metadata> {
+  const { slug } = await props.params;
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) return {};
   return {
     title: project.title,
     description: project.shortDescription,
+    alternates: { canonical: `/project/${project.slug}` },
     openGraph: {
+      type: "article",
       title: project.title,
       description: project.shortDescription,
       images: project.coverImage ? [project.coverImage] : [],
@@ -35,136 +32,128 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ProjectPage({ params }: PageProps) {
-  const { slug } = await params;
-  const project = await prisma.project.findUnique({ where: { slug } });
+export default async function ProjectPage(props: PageProps<"/project/[slug]">) {
+  const { slug } = await props.params;
+  const [project, all, chapters] = await Promise.all([
+    prisma.project.findUnique({ where: { slug } }),
+    prisma.project.findMany({
+      orderBy: { order: "asc" },
+      select: { slug: true, title: true },
+    }),
+    getChapters(),
+  ]);
   if (!project) notFound();
 
-  const fullStoryHtml = project.fullStory
-    ? await markdownToHtml(project.fullStory)
-    : null;
+  const storyHtml = project.fullStory ? await markdownToHtml(project.fullStory) : null;
+  // Align the margin label with the story's first rule when it opens on a heading.
+  const storyOpensWithHeading = /^\s*<h2/.test(storyHtml ?? "");
+  const embed = project.videoUrl ? toYouTubeEmbed(project.videoUrl) : null;
+  const index = all.findIndex((p) => p.slug === project.slug);
+  const next = all.length > 1 ? all[(index + 1) % all.length] : null;
+  let figure = 0;
 
   return (
-    <>
-      <Navbar />
-      <main className="pt-28 pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Back */}
-          <Link
-            href="/#projects"
-            className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-[#22C55E] text-sm font-medium transition-colors duration-200 mb-10 cursor-pointer"
-          >
-            <ArrowLeft size={16} /> Back to projects
+    <SiteShell chapters={chapters}>
+      <article aria-labelledby="case-title" className="wrap pb-24 pt-12 md:pb-32 md:pt-16">
+        <p className="sc">
+          <Link href="/#projects" className="link text-muted hover:text-bone">
+            ← Selected work
           </Link>
+        </p>
 
-          {/* Header */}
-          <header className="mb-10">
-            <div className="flex flex-wrap gap-2 mb-4">
-              {project.techStack.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-2.5 py-1 rounded-lg bg-[#1E293B] border border-[var(--color-border)] text-[#94A3B8] text-xs font-medium"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-            <h1 className="font-archivo text-4xl md:text-5xl font-bold mb-4">
-              {project.title}
-            </h1>
-            <p className="text-[#94A3B8] text-xl leading-relaxed mb-6">
-              {project.shortDescription}
+        <header className="folio mt-14 gap-y-5 md:mt-20">
+          <p className="folio-label sc text-muted lg:pt-[1.3em]">Case study</p>
+          <CaseTitle
+            slug={project.slug}
+            as="h1"
+            id="case-title"
+            className="folio-wide text-[clamp(40px,5.4vw,80px)] font-normal leading-[1.02] tracking-[-0.026em] text-balance"
+          >
+            {project.title}
+          </CaseTitle>
+          <p className="folio-text text-[21px] italic leading-[1.45] text-pretty text-muted md:text-[24px]">
+            {project.shortDescription}
+          </p>
+        </header>
+
+        {project.coverImage && (
+          <div className="mt-12 md:mt-16">
+            <Figure number={++figure} caption={`${project.title}, cover.`}>
+              <FigureImage src={project.coverImage} alt={`${project.title} — cover image`} priority />
+            </Figure>
+          </div>
+        )}
+
+        <div className="mt-12 md:mt-16">
+          <CaseRows project={project} />
+        </div>
+
+        {embed && (
+          <div className="mt-14 md:mt-20">
+            <Figure number={++figure} caption="Demo video." aspect="aspect-video">
+              <iframe
+                src={embed}
+                title={`${project.title} — demo video`}
+                loading="lazy"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full border-0"
+              />
+            </Figure>
+          </div>
+        )}
+
+        {storyHtml && (
+          <div className="folio mt-14 md:mt-20">
+            <p
+              className={`folio-label sc text-muted ${
+                storyOpensWithHeading ? "lg:pt-[15px]" : "lg:pt-[0.6em]"
+              }`}
+            >
+              The full story
             </p>
-            <div className="flex gap-4">
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1E293B] border border-[var(--color-border)] text-[#F8FAFC] hover:border-[#22C55E]/40 font-medium text-sm transition-colors duration-200 cursor-pointer"
-                >
-                  <GitHub size={16} /> GitHub
-                </a>
-              )}
-              {project.demoUrl && (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#22C55E] text-[#0F172A] hover:bg-[#16A34A] font-semibold text-sm transition-colors duration-200 cursor-pointer"
-                >
-                  <ExternalLink size={16} /> Live Demo
-                </a>
-              )}
-            </div>
-          </header>
-
-          {/* Gallery Slider */}
-          <div className="mb-12">
-            <ProjectSlider 
-              images={[
-                ...(project.coverImage ? [project.coverImage] : []),
-                ...(project.gallery || []),
-              ]} 
-              title={project.title}
-              aspectRatio="cover"
+            <div
+              className="prose-mono folio-text"
+              dangerouslySetInnerHTML={{ __html: storyHtml }}
             />
           </div>
+        )}
 
-          {/* YouTube video */}
-          {project.videoUrl && (
-            <div className="mb-10">
-              <div className="flex items-center gap-2 text-[#22C55E] text-sm font-medium mb-3">
-                <Play size={14} /> Demo Video
-              </div>
-              <div className="relative w-full pb-[56.25%] rounded-2xl overflow-hidden border border-[var(--color-border)]">
-                <iframe
-                  src={project.videoUrl.replace("watch?v=", "embed/")}
-                  title={`${project.title} demo video`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full"
-                />
-              </div>
-            </div>
-          )}
+        {project.gallery.length > 0 && (
+          <div className="mt-14 flex flex-col gap-12 md:mt-20 md:gap-16">
+            {project.gallery.map((src, i) => (
+              <Figure
+                key={src}
+                number={++figure}
+                caption={`${project.title}, image ${i + 1} of ${project.gallery.length}.`}
+              >
+                <FigureImage src={src} alt={`${project.title} — gallery image ${i + 1}`} />
+              </Figure>
+            ))}
+          </div>
+        )}
+      </article>
 
-          {/* Challenges + Outcomes */}
-          {(project.challenges || project.outcomes) && (
-            <div className="grid md:grid-cols-2 gap-6 mb-10">
-              {project.challenges && (
-                <div className="bg-[#1E293B] rounded-2xl border border-[var(--color-border)] p-6">
-                  <h2 className="font-archivo font-semibold text-sm text-[#22C55E] uppercase tracking-widest mb-3">
-                    Challenges
-                  </h2>
-                  <p className="text-[#94A3B8] text-sm leading-relaxed">
-                    {project.challenges}
-                  </p>
-                </div>
-              )}
-              {project.outcomes && (
-                <div className="bg-[#1E293B] rounded-2xl border border-[var(--color-border)] p-6">
-                  <h2 className="font-archivo font-semibold text-sm text-[#22C55E] uppercase tracking-widest mb-3">
-                    Outcomes
-                  </h2>
-                  <p className="text-[#94A3B8] text-sm leading-relaxed">
-                    {project.outcomes}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Full story */}
-          {fullStoryHtml && (
-            <article
-              className="prose"
-              dangerouslySetInnerHTML={{ __html: fullStoryHtml }}
-            />
-          )}
+      <nav aria-label="More work" className="wrap pb-24 md:pb-32">
+        <div className="folio gap-y-4 border-t border-rule pt-7">
+          <p className="folio-label sc text-muted lg:pt-[1em]">
+            {next ? "Next case" : "More work"}
+          </p>
+          <div className="folio-wide flex flex-col gap-6">
+            {next && (
+              <Link
+                href={`/project/${next.slug}`}
+                className="text-[clamp(32px,3.8vw,56px)] font-light leading-[1.05] tracking-[-0.022em] text-balance transition-colors duration-200 hover:text-bone-dim"
+              >
+                {next.title} →
+              </Link>
+            )}
+            <Link href="/projects" className="sc link self-start">
+              All projects
+            </Link>
+          </div>
         </div>
-      </main>
-      <Footer />
-    </>
+      </nav>
+    </SiteShell>
   );
 }

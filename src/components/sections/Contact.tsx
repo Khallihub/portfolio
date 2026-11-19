@@ -1,10 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { useState } from "react";
-import { Send, Loader2, CheckCircle, AlertCircle } from "lucide-react";
-import { GitHub, LinkedIn, X } from "@/components/ui/Icons";
-import { fadeUp, fadeLeft, staggerContainer, viewportOnce, motionNone } from "@/lib/animations";
+import { useRef, useState } from "react";
+import type { Chapter } from "@/lib/content";
 
 interface ContactConfig {
   email: string;
@@ -15,198 +12,171 @@ interface ContactConfig {
 }
 
 interface ContactProps {
+  chapter: Chapter;
   config: ContactConfig;
 }
 
-type FormState = "idle" | "sending" | "success" | "error";
+type Field = "name" | "email" | "message";
+type Status = "idle" | "sending" | "success" | "error";
 
-export default function Contact({ config }: ContactProps) {
-  const shouldReduce = useReducedMotion();
-  const [formState, setFormState] = useState<FormState>("idle");
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+function validate(values: Record<Field, string>) {
+  const errors: Partial<Record<Field, string>> = {};
+  if (!values.name.trim()) errors.name = "Please add your name.";
+  if (!values.email.trim()) errors.email = "Please add your email address.";
+  else if (!EMAIL.test(values.email.trim()))
+    errors.email = "That email address doesn't look right.";
+  if (!values.message.trim()) errors.message = "Please write a short note.";
+  return errors;
+}
+
+export default function Contact({ chapter, config }: ContactProps) {
+  const [values, setValues] = useState<Record<Field, string>>({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
+  const [status, setStatus] = useState<Status>("idle");
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const field = event.target.name as Field;
+    setValues((prev) => ({ ...prev, [field]: event.target.value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormState("sending");
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const found = validate(values);
+    setErrors(found);
+    const first = (["name", "email", "message"] as Field[]).find((f) => found[f]);
+    if (first) {
+      const target = { name: nameRef, email: emailRef, message: messageRef }[first];
+      target.current?.focus();
+      return;
+    }
+
+    setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(values),
       });
-      if (!res.ok) throw new Error();
-      setFormState("success");
-      setForm({ name: "", email: "", message: "" });
+      if (!res.ok) throw new Error(String(res.status));
+      setStatus("success");
+      setValues({ name: "", email: "", message: "" });
     } catch {
-      setFormState("error");
+      setStatus("error");
     }
   };
 
-  const socialLinks = [
-    { href: config.githubUrl, icon: GitHub, label: "GitHub" },
-    { href: config.linkedinUrl, icon: LinkedIn, label: "LinkedIn" },
-    { href: config.twitterUrl, icon: X, label: "X (Twitter)" },
-  ].filter((s) => s.href);
+  const socials = [
+    { href: config.githubUrl, label: "GitHub" },
+    { href: config.linkedinUrl, label: "LinkedIn" },
+    { href: config.twitterUrl, label: "X" },
+  ].filter((s): s is { href: string; label: string } => Boolean(s.href));
+
+  const fieldProps = (field: Field) => ({
+    id: `contact-${field}`,
+    name: field,
+    value: values[field],
+    onChange,
+    "aria-invalid": errors[field] ? true : undefined,
+    "aria-describedby": errors[field] ? `contact-${field}-error` : undefined,
+    className: "field",
+  });
+
+  const errorText = (field: Field) =>
+    errors[field] ? (
+      <span id={`contact-${field}-error`} className="note text-alert">
+        {errors[field]}
+      </span>
+    ) : null;
 
   return (
-    <section id="contact" className="py-28 px-6">
-      <div className="max-w-6xl mx-auto">
-        <motion.p
-          variants={shouldReduce ? motionNone : fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="text-[#22C55E] text-sm font-semibold tracking-widest uppercase mb-4"
+    <section
+      id={chapter.id}
+      aria-labelledby={`${chapter.id}-title`}
+      className="wrap pb-24 md:pb-32"
+    >
+      <div className="folio gap-y-8 border-t border-rule pt-7">
+        <h2 id={`${chapter.id}-title`} className="folio-label sc text-muted">
+          {chapter.numeral} — {chapter.label}
+        </h2>
+        <p className="folio-wide text-[clamp(42px,6vw,92px)] font-light italic leading-none tracking-[-0.028em] text-balance">
+          {config.ctaText ?? "Let's work together."}
+        </p>
+        <p className="folio-text text-[21px] leading-[1.5] text-pretty md:text-[24px]">
+          Write to{" "}
+          <a href={`mailto:${config.email}`} className="link">
+            {config.email}
+          </a>
+          , or leave a note below. I&apos;ll get back to you as soon as possible.
+        </p>
+
+        <form
+          onSubmit={onSubmit}
+          noValidate
+          className="folio-text mt-2 grid gap-x-8 gap-y-8 sm:grid-cols-2"
         >
-          Contact
-        </motion.p>
-        <motion.h2
-          variants={shouldReduce ? motionNone : fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          transition={{ delay: 0.1 }}
-          className="font-archivo text-4xl md:text-5xl font-bold mb-16"
-        >
-          {config.ctaText ?? "Let's Work Together"}
-        </motion.h2>
-
-        <div className="grid md:grid-cols-2 gap-16">
-          {/* Left: info */}
-          <motion.div
-            variants={shouldReduce ? motionNone : fadeLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-          >
-            <p className="text-[#94A3B8] text-lg leading-relaxed mb-8">
-              Have a project in mind or just want to say hi? My inbox is always
-              open. I&apos;ll get back to you as soon as possible.
-            </p>
-            <a
-              href={`mailto:${config.email}`}
-              className="inline-block text-[#22C55E] font-semibold text-lg hover:underline mb-10 cursor-pointer"
-            >
-              {config.email}
-            </a>
-
-            {socialLinks.length > 0 && (
-              <div>
-                <p className="text-xs text-[#94A3B8] uppercase tracking-widest mb-4">
-                  Find me on
-                </p>
-                <div className="flex gap-4">
-                  {socialLinks.map(({ href, icon: Icon, label }) => (
-                    <a
-                      key={label}
-                      href={href!}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={label}
-                      className="p-3 rounded-xl bg-[#1E293B] border border-[var(--color-border)] text-[#94A3B8] hover:text-[#22C55E] hover:border-[#22C55E]/40 transition-colors duration-200 cursor-pointer"
-                    >
-                      <Icon size={20} />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Right: form */}
-          <motion.form
-            variants={shouldReduce ? motionNone : fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportOnce}
-            transition={{ delay: 0.15 }}
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-4"
-            noValidate
-          >
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <label htmlFor="contact-name" className="text-sm text-[#94A3B8] font-medium">
-                  Name
-                </label>
-                <input
-                  id="contact-name"
-                  name="name"
-                  type="text"
-                  value={form.name}
-                  onChange={handleChange}
-                  required
-                  placeholder="Your name"
-                  className="px-4 py-3 rounded-xl bg-[#1E293B] border border-[var(--color-border)] text-[#F8FAFC] placeholder:text-[#94A3B8]/50 focus:outline-none focus:border-[#22C55E]/60 transition-colors duration-200 text-sm"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="contact-email" className="text-sm text-[#94A3B8] font-medium">
-                  Email
-                </label>
-                <input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                  placeholder="your@email.com"
-                  className="px-4 py-3 rounded-xl bg-[#1E293B] border border-[var(--color-border)] text-[#F8FAFC] placeholder:text-[#94A3B8]/50 focus:outline-none focus:border-[#22C55E]/60 transition-colors duration-200 text-sm"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="contact-message" className="text-sm text-[#94A3B8] font-medium">
-                Message
-              </label>
-              <textarea
-                id="contact-message"
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                required
-                rows={5}
-                placeholder="Tell me about your project..."
-                className="px-4 py-3 rounded-xl bg-[#1E293B] border border-[var(--color-border)] text-[#F8FAFC] placeholder:text-[#94A3B8]/50 focus:outline-none focus:border-[#22C55E]/60 transition-colors duration-200 text-sm resize-none"
-              />
-            </div>
-
-            {/* Status messages */}
-            {formState === "success" && (
-              <div className="flex items-center gap-2 text-[#22C55E] text-sm">
-                <CheckCircle size={16} /> Message sent! I&apos;ll be in touch soon.
-              </div>
-            )}
-            {formState === "error" && (
-              <div className="flex items-center gap-2 text-red-400 text-sm">
-                <AlertCircle size={16} /> Something went wrong. Please try again.
-              </div>
-            )}
-
-            <button
-              id="contact-submit"
-              type="submit"
-              disabled={formState === "sending"}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#22C55E] text-[#0F172A] font-semibold hover:bg-[#16A34A] disabled:opacity-60 disabled:cursor-not-allowed transition-colors duration-200 cursor-pointer self-start"
-            >
-              {formState === "sending" ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" /> Sending...
-                </>
-              ) : (
-                <>
-                  <Send size={16} /> Send Message
-                </>
-              )}
+          <label htmlFor="contact-name" className="flex flex-col gap-1.5">
+            <span className="sc text-muted">Your name</span>
+            <input ref={nameRef} type="text" autoComplete="name" required {...fieldProps("name")} />
+            {errorText("name")}
+          </label>
+          <label htmlFor="contact-email" className="flex flex-col gap-1.5">
+            <span className="sc text-muted">Your email</span>
+            <input
+              ref={emailRef}
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              required
+              {...fieldProps("email")}
+            />
+            {errorText("email")}
+          </label>
+          <label htmlFor="contact-message" className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className="sc text-muted">The note</span>
+            <textarea ref={messageRef} rows={4} required {...fieldProps("message")} className="field resize-y" />
+            {errorText("message")}
+          </label>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 sm:col-span-2">
+            <button type="submit" className="btn sc" disabled={status === "sending"}>
+              {status === "sending" ? "Sending…" : "Send message"}
             </button>
-          </motion.form>
-        </div>
+            <p role="status" aria-live="polite" className="note">
+              {status === "success" && (
+                <span className="text-bone">Thank you — your note is on its way.</span>
+              )}
+              {status === "error" && (
+                <span className="text-alert">
+                  Something went wrong. Please try again, or write to {config.email}.
+                </span>
+              )}
+            </p>
+          </div>
+        </form>
+
+        {socials.length > 0 && (
+          <div className="folio-note note lg:self-end">
+            <p className="sc mb-1.5">Elsewhere</p>
+            <ul className="flex flex-col gap-1 text-[14px]">
+              {socials.map((social) => (
+                <li key={social.label}>
+                  <a href={social.href} className="link text-bone" rel="noopener noreferrer">
+                    {social.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,49 +1,55 @@
-import type { Metadata } from "next";
-import { Archivo, Space_Grotesk } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Instrument_Sans, Newsreader } from "next/font/google";
+import { site } from "@/lib/site";
 import "./globals.css";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
+
+const title = `${site.name} — ${site.role}`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-  ),
+  metadataBase: new URL(site.url),
   title: {
-    default: "Portfolio",
-    template: "%s | Portfolio",
+    default: title,
+    template: `%s — ${site.name}`,
   },
-  description:
-    "A high-impact, dynamic portfolio experience. Explore my projects, experience, and skills.",
+  description: site.description,
+  applicationName: site.name,
+  authors: [{ name: site.name }],
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "Portfolio",
-    description:
-      "A high-impact, dynamic portfolio experience. Explore my projects, experience, and skills.",
-    siteName: "Portfolio",
+    siteName: site.name,
+    title,
+    description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Portfolio",
-    description:
-      "A high-impact, dynamic portfolio experience. Explore my projects, experience, and skills.",
+    title,
+    description: site.description,
   },
   robots: {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#121110",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -54,12 +60,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${spaceGrotesk.variable}`}
+      className={`${newsreader.variable} ${instrumentSans.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-[#0F172A] text-[#F8FAFC] antialiased min-h-screen">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

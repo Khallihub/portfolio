@@ -1,34 +1,37 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { FileQuestion, MoveLeft } from "lucide-react";
+import SiteShell from "@/components/layout/SiteShell";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false },
+};
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center px-6">
-      <div className="max-w-md w-full text-center">
-        <div className="w-20 h-20 bg-[#1E293B] border border-[#334155] rounded-3xl flex items-center justify-center mx-auto mb-8 text-[#22C55E]">
-          <FileQuestion size={40} />
+    <SiteShell chapters={[]}>
+      <section aria-labelledby="nf-title" className="wrap pb-28 pt-20 md:pb-40 md:pt-32">
+        <div className="folio gap-y-6">
+          <p className="folio-label sc text-muted lg:pt-[1.4em]">Erratum · 404</p>
+          <h1
+            id="nf-title"
+            className="folio-wide text-[clamp(44px,6.4vw,96px)] font-light leading-none tracking-[-0.028em] text-balance"
+          >
+            This page is <em>not in the book.</em>
+          </h1>
+          <p className="folio-text text-[21px] italic leading-[1.45] text-pretty text-muted md:text-[24px]">
+            It may have moved, or the address may be mistyped.
+          </p>
+          <p className="folio-text sc flex flex-wrap gap-x-8 gap-y-3">
+            <Link href="/" className="link">
+              ← Return to the contents
+            </Link>
+            <Link href="/projects" className="link">
+              All projects
+            </Link>
+          </p>
         </div>
-        
-        <h1 className="font-archivo text-4xl font-bold text-[#F8FAFC] mb-4">
-          404
-        </h1>
-        
-        <h2 className="text-xl font-semibold text-[#F8FAFC] mb-4">
-          Page Not Found
-        </h2>
-        
-        <p className="text-[#94A3B8] mb-10 leading-relaxed">
-          The page you are looking for might have been moved, deleted, or never existed in the first place.
-        </p>
-
-        <Link
-          href="/"
-          className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-[#22C55E] text-[#0F172A] font-bold hover:bg-[#16A34A] transition-all cursor-pointer"
-        >
-          <MoveLeft size={18} />
-          Back to Home
-        </Link>
-      </div>
-    </div>
+      </section>
+    </SiteShell>
   );
 }

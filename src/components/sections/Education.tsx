@@ -1,8 +1,4 @@
-"use client";
-
-import { motion, useReducedMotion } from "framer-motion";
-import { GraduationCap } from "lucide-react";
-import { fadeUp, staggerContainer, viewportOnce, motionNone } from "@/lib/animations";
+import type { Chapter } from "@/lib/content";
 
 interface Education {
   id: string;
@@ -14,70 +10,36 @@ interface Education {
 }
 
 interface EducationProps {
+  chapter: Chapter;
   education: Education[];
 }
 
-export default function Education({ education }: EducationProps) {
-  const shouldReduce = useReducedMotion();
-
+export default function Education({ chapter, education }: EducationProps) {
   return (
-    <section id="education" className="py-28 px-6">
-      <div className="max-w-6xl mx-auto">
-        <motion.p
-          variants={shouldReduce ? motionNone : fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="text-[#22C55E] text-sm font-semibold tracking-widest uppercase mb-4"
-        >
-          Education
-        </motion.p>
-        <motion.h2
-          variants={shouldReduce ? motionNone : fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          transition={{ delay: 0.1 }}
-          className="font-archivo text-4xl md:text-5xl font-bold mb-16"
-        >
-          Academic Background
-        </motion.h2>
-
-        <motion.div
-          variants={shouldReduce ? motionNone : staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          className="grid md:grid-cols-2 gap-6"
-        >
+    <section
+      id={chapter.id}
+      aria-labelledby={`${chapter.id}-title`}
+      className="wrap pb-24 md:pb-36"
+    >
+      <div className="folio gap-y-10 border-t border-rule pt-7">
+        <h2 id={`${chapter.id}-title`} className="folio-label sc text-muted">
+          {chapter.numeral} — {chapter.label}
+        </h2>
+        <ol className="folio-text flex flex-col gap-10">
           {education.map((edu) => (
-            <motion.article
-              key={edu.id}
-              variants={shouldReduce ? motionNone : fadeUp}
-              className="bg-[#1E293B] rounded-2xl border border-[var(--color-border)] p-6 flex gap-4"
-            >
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/20 flex items-center justify-center">
-                <GraduationCap size={18} className="text-[#22C55E]" />
-              </div>
-              <div>
-                <h3 className="font-archivo font-semibold text-lg leading-tight mb-1">
-                  {edu.degree}
-                </h3>
-                <p className="text-[#22C55E] text-sm font-medium mb-1">
-                  {edu.institution}
-                </p>
-                <p className="text-[#94A3B8] text-sm mb-2">
-                  {edu.startYear} — {edu.endYear ?? "Present"}
-                </p>
-                {edu.description && (
-                  <p className="text-[#94A3B8] text-sm leading-relaxed">
-                    {edu.description}
-                  </p>
-                )}
-              </div>
-            </motion.article>
+            <li key={edu.id} className="rise">
+              <h3 className="text-[28px] font-normal leading-[1.12] tracking-[-0.015em] md:text-[34px]">
+                {edu.degree}
+              </h3>
+              <p className="sc mt-2.5 text-muted">
+                {edu.institution} · {edu.startYear} — {edu.endYear ?? "present"}
+              </p>
+              {edu.description && (
+                <p className="mt-4 text-pretty">{edu.description}</p>
+              )}
+            </li>
           ))}
-        </motion.div>
+        </ol>
       </div>
     </section>
   );

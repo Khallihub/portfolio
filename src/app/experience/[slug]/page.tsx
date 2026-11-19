@@ -1,122 +1,109 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { markdownToHtml } from "@/lib/markdown";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft, MapPin, Calendar } from "lucide-react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import type { Metadata } from "next";
+import { getChapters } from "@/lib/content";
+import { duration, monthRange } from "@/lib/format";
+import SiteShell from "@/components/layout/SiteShell";
 
 export const revalidate = 3600;
 
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
-
 export async function generateStaticParams() {
-  const experiences = await prisma.experience.findMany({
-    select: { slug: true },
-  });
+  const experiences = await prisma.experience.findMany({ select: { slug: true } });
   return experiences.map((e) => ({ slug: e.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata(
+  props: PageProps<"/experience/[slug]">,
+): Promise<Metadata> {
+  const { slug } = await props.params;
   const exp = await prisma.experience.findUnique({ where: { slug } });
   if (!exp) return {};
   return {
     title: `${exp.role} at ${exp.company}`,
     description: exp.description,
+    alternates: { canonical: `/experience/${exp.slug}` },
   };
 }
 
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    year: "numeric",
-  }).format(new Date(date));
-}
-
-export default async function ExperiencePage({ params }: PageProps) {
-  const { slug } = await params;
-  const exp = await prisma.experience.findUnique({ where: { slug } });
+export default async function ExperiencePage(props: PageProps<"/experience/[slug]">) {
+  const { slug } = await props.params;
+  const [exp, chapters] = await Promise.all([
+    prisma.experience.findUnique({ where: { slug } }),
+    getChapters(),
+  ]);
   if (!exp) notFound();
 
-  const fullStoryHtml = exp.fullStory
-    ? await markdownToHtml(exp.fullStory)
-    : null;
+  const storyHtml = exp.fullStory ? await markdownToHtml(exp.fullStory) : null;
+  // Align the margin label with the story's first rule when it opens on a heading.
+  const storyOpensWithHeading = /^\s*<h2/.test(storyHtml ?? "");
 
   return (
-    <>
-      <Navbar />
-      <main className="pt-28 pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Back */}
-          <Link
-            href="/#experience"
-            className="inline-flex items-center gap-2 text-[#94A3B8] hover:text-[#22C55E] text-sm font-medium transition-colors duration-200 mb-10 cursor-pointer"
-          >
-            <ArrowLeft size={16} /> Back to experience
+    <SiteShell chapters={chapters}>
+      <article aria-labelledby="exp-title" className="wrap pb-24 pt-12 md:pb-32 md:pt-16">
+        <p className="sc">
+          <Link href="/#experience" className="link text-muted hover:text-bone">
+            ← Experience
           </Link>
+        </p>
 
-          {/* Header */}
-          <header className="mb-12">
-            <h1 className="font-archivo text-4xl md:text-5xl font-bold mb-3">
-              {exp.role}
-            </h1>
-            <div className="flex flex-wrap items-center gap-4 text-[#94A3B8]">
-              <span className="text-[#22C55E] font-semibold text-xl">
-                {exp.company}
-              </span>
-              {exp.location && (
-                <span className="flex items-center gap-1.5 text-sm">
-                  <MapPin size={14} /> {exp.location}
-                </span>
-              )}
-              <span className="flex items-center gap-1.5 text-sm">
-                <Calendar size={14} />
-                {formatDate(exp.startDate)} —{" "}
-                {exp.endDate ? formatDate(exp.endDate) : "Present"}
-              </span>
-            </div>
-          </header>
+        <header className="folio mt-14 gap-y-5 md:mt-20">
+          <p className="folio-label text-[19px] italic text-muted [font-variant-numeric:oldstyle-nums] md:text-[20px] lg:pt-[1.1em]">
+            {monthRange(exp.startDate, exp.endDate)}
+          </p>
+          <h1
+            id="exp-title"
+            className="folio-wide text-[clamp(40px,5.4vw,80px)] font-normal leading-[1.02] tracking-[-0.026em] text-balance"
+          >
+            {exp.role}
+          </h1>
+          <p className="folio-text sc text-muted">
+            {exp.company}
+            {exp.location ? ` · ${exp.location}` : ""}
+          </p>
+          <p className="folio-note sc hidden text-muted md:block">
+            {duration(exp.startDate, exp.endDate)}
+          </p>
+          <p className="folio-text mt-2 text-[21px] italic leading-[1.45] text-pretty text-muted md:text-[24px]">
+            {exp.description}
+          </p>
+        </header>
 
-          {/* Highlights */}
-          {exp.highlights.length > 0 && (
-            <section className="mb-10 bg-[#1E293B] rounded-2xl border border-[var(--color-border)] p-6">
-              <h2 className="font-archivo font-semibold text-sm text-[#22C55E] uppercase tracking-widest mb-4">
-                Key Impact
-              </h2>
-              <ul className="flex flex-col gap-3">
-                {exp.highlights.map((h, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="text-[#22C55E] mt-0.5 shrink-0">▸</span>
-                    <span className="text-[#94A3B8] text-sm leading-relaxed">
-                      {h}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+        {exp.highlights.length > 0 && (
+          <section aria-labelledby="highlights-title" className="folio mt-14 gap-y-4 md:mt-20">
+            <h2 id="highlights-title" className="folio-label sc text-muted lg:pt-[0.6em]">
+              Highlights
+            </h2>
+            <ul className="folio-text flex flex-col gap-3">
+              {exp.highlights.map((highlight) => (
+                <li key={highlight} className="flex gap-4 text-pretty">
+                  <span aria-hidden="true" className="text-muted">
+                    –
+                  </span>
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-          {/* Summary */}
-          <div className="mb-10">
-            <p className="text-[#94A3B8] text-lg leading-relaxed">
-              {exp.description}
+        {storyHtml && (
+          <div className="folio mt-14 md:mt-20">
+            <p
+              className={`folio-label sc text-muted ${
+                storyOpensWithHeading ? "lg:pt-[15px]" : "lg:pt-[0.6em]"
+              }`}
+            >
+              The full account
             </p>
-          </div>
-
-          {/* Full story */}
-          {fullStoryHtml && (
-            <article
-              className="prose"
-              dangerouslySetInnerHTML={{ __html: fullStoryHtml }}
+            <div
+              className="prose-mono folio-text"
+              dangerouslySetInnerHTML={{ __html: storyHtml }}
             />
-          )}
-        </div>
-      </main>
-      <Footer />
-    </>
+          </div>
+        )}
+      </article>
+    </SiteShell>
   );
 }
